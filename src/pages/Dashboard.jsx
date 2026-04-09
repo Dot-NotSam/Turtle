@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { connectSpacetime, disconnectSpacetime } from '../services/spacetime'
 
 const mockData = [
   { id: 1, hostname: "dev-station-01", ip: "192.168.1.101", status: "busy", cpu: 78, memory: 62, currentTask: "Uploading logs to AWS S3", lastSeen: "2s ago", os: "Ubuntu 22.04" },
@@ -89,7 +88,7 @@ const styles = `
     text-overflow: ellipsis;
   }
 
-  /* SpacetimeDB connection and empty state styling */
+  /* Connection and empty state styling */
   .connection-banner {
     display: flex;
     align-items: center;
@@ -155,33 +154,13 @@ export default function Dashboard() {
   useEffect(() => {
     let mounted = true;
 
-    const handleUpdate = ({ agents, isConnected: dbConnected }) => {
-      if (!mounted) return;
-      setIsConnected(dbConnected);
-
-      if (dbConnected) {
-        setLoading(false);
-        // Format rust structures natively mapping fallback missing properties
-        const formatted = agents.map(n => ({
-          id: n.agentId || n.agent_id,
-          hostname: n.hostname || 'Unknown Host',
-          ip: n.ipAddress || n.ip_address || '0.0.0.0',
-          os: n.os || 'Unknown OS',
-          status: n.status || 'offline',
-          cpu: n.cpuUsage !== undefined ? n.cpuUsage : (n.cpu_usage !== undefined ? n.cpu_usage : 0),
-          memory: n.memoryUsage !== undefined ? n.memoryUsage : (n.memory_usage !== undefined ? n.memory_usage : 0),
-          currentTask: n.currentTask || n.current_task || null,
-          lastSeen: n.lastSeen ? "Just now" : "Unknown"
-        }));
-        // Only set them if db provides agents, if empty we render Empty State logic
-        setNodes(formatted);
-      } else {
-        // Reconnecting... fallback to mock data smoothly
+    // Use mock data natively
+    const setMockDelay = setTimeout(() => {
+      if (mounted) {
         setNodes(mockData);
+        setIsConnected(false);
       }
-    };
-
-    connectSpacetime(handleUpdate);
+    }, 500);
 
     const timer = setTimeout(() => {
       if (mounted && loading) setLoading(false);
@@ -191,7 +170,7 @@ export default function Dashboard() {
 
     return () => {
       mounted = false;
-      disconnectSpacetime(handleUpdate);
+      clearTimeout(setMockDelay);
       clearTimeout(timer);
     };
   }, [loading]);
@@ -205,9 +184,9 @@ export default function Dashboard() {
       <style>{styles}</style>
 
       {/* SPONGY CONNECTION BANNER */}
-      <div className={`connection-banner ${isConnected ? 'banner-connected' : 'banner-disconnected'}`}>
-        <div className={isConnected ? "banner-dot-green" : "banner-dot-amber"} />
-        {isConnected ? 'Live · SpacetimeDB' : 'Reconnecting... · Demo Nodes'}
+      <div className={`connection-banner banner-disconnected`}>
+        <div className="banner-dot-amber" />
+        Live · Nodes
       </div>
 
       {/* HEADER */}
@@ -248,7 +227,7 @@ export default function Dashboard() {
           </div>
           <h2 style={{ fontSize: '1.1rem', color: 'var(--text-primary)', marginBottom: '8px' }}>No nodes connected</h2>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: '280px', lineHeight: 1.5 }}>
-            Start the OpenClaw agent on your remote PC to see it organically appear here.
+            Start the Turtle agent on your remote PC to see it organically appear here.
           </p>
         </div>
       ) : (

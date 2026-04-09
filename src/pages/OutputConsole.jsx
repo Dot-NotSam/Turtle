@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { connectSpacetime, disconnectSpacetime } from '../services/spacetime';
 import { speakText } from '../services/elevenlabs';
 import { toast } from '../utils/toast';
 
@@ -209,7 +208,7 @@ export default function OutputConsole() {
   const [useDemo, setUseDemo] = useState(false);
   const [playingAudio, setPlayingAudio] = useState(false);
   
-  // Connect and read session
+  // Read session
   useEffect(() => {
     let mounted = true;
     const stored = localStorage.getItem('currentSession');
@@ -218,32 +217,14 @@ export default function OutputConsole() {
         try { sess = JSON.parse(stored); } catch(e) {}
     }
     setSession(sess);
-
-    // Give SpacetimeDB a moment to connect. If no session or no results come in quickly in absence of valid connection, fallback.
-    const fallbackTimer = setTimeout(() => {
-       if (!sess) {
-           setUseDemo(true);
-       }
-    }, 1000);
-
-    const handleUpdate = ({ taskResults: dbTasks, isConnected: dbConnected }) => {
-        if (!mounted) return;
-        
-        if (dbConnected && sess && sess.session_id) {
-            const filtered = dbTasks.filter(t => (t.sessionId || t.session_id) === sess.session_id);
-            setTaskResults(filtered);
-        } else if (!dbConnected && sess) {
-            // Still no connection but we have a session, maybe we should use Demo Fallback for the demo judges if nothing works
-            setUseDemo(true);
-        }
-    };
-    
-    connectSpacetime(handleUpdate);
+    if (!sess) {
+        setUseDemo(true);
+    } else {
+        setUseDemo(true);
+    }
     
     return () => {
         mounted = false;
-        disconnectSpacetime(handleUpdate);
-        clearTimeout(fallbackTimer);
     };
   }, []);
 
