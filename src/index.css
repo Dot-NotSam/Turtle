@@ -1,0 +1,316 @@
+/* ===== OpenClaw Design System ===== */
+:root {
+  --bg-primary: #080c18;
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --bg-glass: rgba(255, 255, 255, 0.06);
+  --border-glass: rgba(255, 255, 255, 0.10);
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --accent-green: #22c55e;
+  --accent-red: #ef4444;
+  --accent-amber: #f59e0b;
+  --gradient-primary: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --navbar-height: 64px;
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(0deg,
+      rgba(255, 255, 255, 0.02) 0px,
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px,
+      transparent 3px);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+button,
+a,
+.pc-card,
+.shortcut-pill,
+.interactive-element {
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+button:active,
+a:active,
+.pc-card:active,
+.shortcut-pill:active,
+.interactive-element:active {
+  transform: scale(0.97) !important;
+}
+
+/* ===== Scrollbar Styling ===== */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Animated Background Orbs ===== */
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.12;
+  will-change: transform;
+}
+
+.bg-orb--1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #3b82f6, transparent 70%);
+  top: -10%;
+  left: -10%;
+  animation: orb-drift-1 25s ease-in-out infinite;
+}
+
+.bg-orb--2 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #8b5cf6, transparent 70%);
+  bottom: -15%;
+  right: -15%;
+  animation: orb-drift-2 30s ease-in-out infinite;
+}
+
+.bg-orb--3 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #6366f1, transparent 70%);
+  top: 40%;
+  left: 50%;
+  animation: orb-drift-3 22s ease-in-out infinite;
+}
+
+@keyframes orb-drift-1 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(80px, 60px) scale(1.1);
+  }
+
+  50% {
+    transform: translate(40px, 120px) scale(0.95);
+  }
+
+  75% {
+    transform: translate(-30px, 50px) scale(1.05);
+  }
+}
+
+@keyframes orb-drift-2 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(-70px, -50px) scale(1.08);
+  }
+
+  50% {
+    transform: translate(-120px, -20px) scale(0.9);
+  }
+
+  75% {
+    transform: translate(-40px, -80px) scale(1.1);
+  }
+}
+
+@keyframes orb-drift-3 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(60px, -40px) scale(1.15);
+  }
+
+  66% {
+    transform: translate(-50px, 30px) scale(0.9);
+  }
+}
+
+/* ===== Page Transition ===== */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: page-enter 0.3s ease both;
+}
+
+/* ===== Pulse Animation ===== */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+}
+
+@keyframes status-blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* ===== Glow Keyframes ===== */
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+
+  50% {
+    filter: drop-shadow(0 0 12px currentColor);
+  }
+}
+
+/* ===== Typing Cursor ===== */
+@keyframes blink-cursor {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ===== Fade In Up for staggered items ===== */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Shimmer for loading ===== */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ===== Sound Wave ===== */
+@keyframes sound-wave {
+
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+
+  50% {
+    transform: scaleY(1);
+  }
+}
