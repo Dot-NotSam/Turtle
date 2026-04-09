@@ -73,7 +73,7 @@ export default function Layout({ children }) {
       <main style={mainStyle}>
         <div style={contentWrapperStyle}>
           <header style={headerStyle}>
-            <span style={logoStyle}>OpenClaw</span>
+            <span style={logoStyle}>Turtle</span>
             <div style={statusDotStyle}>
               <div style={dotStyle} />
               CONNECTED
